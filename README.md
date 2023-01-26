@@ -15,5 +15,10 @@ Note that while we used AMT Sandbox to host our annotation interface, all our an
 If you found our paper or repository useful, please cite us using:
 
 ```
-
+@inproceedings{longeval23,
+author={Kalpesh Krishna and Erin Bransom and Bailey Kuehl and Mohit Iyyer and Pradeep Dasigi and Arman Cohan and Kyle Lo},
+booktitle = {European Chapter of the Association for Computational Linguistics},
+Year = "2023",
+Title={LongEval: Guidelines for Human Evaluation of Faithfulness in Long-form Summarization},
+}
 ```

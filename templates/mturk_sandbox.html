@@ -1,0 +1,155 @@
+<!-- You must include this JavaScript file -->
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<!-- For the full list of available Crowd HTML Elements and their input/output documentation,
+      please refer to https://docs.aws.amazon.com/sagemaker/latest/dg/sms-ui-template-reference.html -->
+
+<!-- You must include crowd-form so that your task submits answers to MTurk -->
+<crowd-form answer-format="flatten-objects">
+
+    <crowd-input name="logging_info" label="Word/phrase 1" id="logging_clicks" value="null" required hidden></crowd-input>
+    <!-- The crowd-classifier element will create a tool for the Worknum_er to select the
+           correct answer to your question -->
+    <crowd-classifier 
+      name="semantic-similarity"
+      categories="['Yes', 'No']"
+      header="Is the highlighted span in the summary fully supported by the source document? (see Instructions for examples)"
+    >
+      <classification-target>
+        <p>
+            <strong>Summary</strong> (<i>focus on highlighted span</i>): 
+                ${annotated_summary}
+        </p>
+
+        <p>
+            <strong>Source Document: </strong><br /><br />
+
+            <!-- The second text you to compare will be substituted for the "text2" variable 
+                   when you publish a batch with a CSV input file containing multiple text items  -->
+      <button type="button" id="prev_hint_button" onclick="prevMatch()">Prev Hint</button> <button type="button" id="next_hint_button" onclick="nextMatch()">Next Hint</button> <span id="hint_counter">(${num_predicted_evidence} hint(s) available)</span> <button type="button" id="store_source_position" onclick="storeSourcePosition()">Store Source Position</button> <br /><i>NOTE: hints may or may not be useful, please skim through document yourself (or search for keywords with Ctrl + F) if hints are unhelpful.</i>
+      <div id="annotated_doc" style="height:300px;overflow:auto; border:1px solid #999;">
+      ${prediction_annotated_source_doc}
+      </div>
+      <script>
+        evidence_num = -1;
+        var storeScrollPressed = false;
+        all_logs = [];
+        if (${num_predicted_evidence} === 0) {
+            document.getElementById("prev_hint_button").disabled = true; 
+            document.getElementById("next_hint_button").disabled = true; 
+        }
+        // var myElement = document.getElementById('evidence-0');
+        // document.getElementById('evidence-' + evidence_num_str).scrollIntoView({block: "center"});
+        // document.getElementById('annotated_doc').scrollTop = myElement.offsetTop - 200;
+        function moveScrollBar(click_type) {
+            evidence_num_str = evidence_num.toString()
+            var scroll_before = document.getElementById('annotated_doc').scrollTop;
+        	document.getElementById('evidence-' + evidence_num_str).scrollIntoView({block: "center"});
+        	var scroll_after = document.getElementById('annotated_doc').scrollTop;
+            var counter_html = document.getElementById('hint_counter')
+            counter_html.innerHTML = "(Hint #" + (evidence_num + 1).toString() + " out of ${num_predicted_evidence} hint(s))";
+
+            doLogging(click_type, scroll_before, scroll_after);
+        }
+        addEventListener('click', (event) => {
+            var test_id = event.path[0].getAttribute('data-testid');
+            var tagName = event.target.tagName;
+            var scroll_after = document.getElementById('annotated_doc').scrollTop;
+            if (test_id === "Yes") {
+                disableSubmitButton("Yes");
+                doLogging("Yes", scroll_after, scroll_after);
+            } else if (test_id === "No") {
+                disableSubmitButton("No");
+                doLogging("No", scroll_after, scroll_after);
+            }
+        
+        });
+        function disableSubmitButton(button_clicked) {
+            var submit_button = document.getElementsByTagName("crowd-classifier")[0].shadowRoot.querySelectorAll('[data-testid="crowd-submit"]')[0];
+            if (button_clicked === "Yes" && !storeScrollPressed) {
+                submit_button.firstElementChild.disabled = true;
+                submit_button.firstElementChild.style.visibility = "hidden";
+            } else if (button_clicked === "No") {
+                submit_button.firstElementChild.disabled = false;
+                submit_button.firstElementChild.style.visibility = "visible";
+            } else if (button_clicked === "StoreSourcePosition") {
+                submit_button.firstElementChild.disabled = false;
+                submit_button.firstElementChild.style.visibility = "visible";
+            }
+        }
+        function storeSourcePosition() {
+            var scroll_after = document.getElementById('annotated_doc').scrollTop;
+            doLogging("store-scroll", scroll_after, scroll_after);
+            disableSubmitButton("StoreSourcePosition");
+            storeScrollPressed = true;
+        }
+        function nextMatch() {
+            evidence_num += 1;
+            if (evidence_num >= ${num_predicted_evidence}) {
+                evidence_num = 0;
+            }
+            moveScrollBar("next");
+        }
+        function prevMatch() {
+            evidence_num -= 1;
+            if (evidence_num < 0) {
+                evidence_num = ${num_predicted_evidence} - 1;
+            }
+            moveScrollBar("previous");
+        }
+        function doLogging(click_type, scroll_before, scroll_after) {
+            all_logs.push({"evidence_num": evidence_num, "timestamp": Date.now(), "click_type": click_type, "scroll_before": scroll_before, "scroll_after": scroll_after});
+            var s = document.getElementById('logging_clicks')
+            s.value = JSON.stringify(all_logs);
+            console.log(all_logs);
+        }
+      </script>
+
+        </p>
+
+      </classification-target>
+
+     <!-- Use the short-instructions section for quick instructions that the Worker
+            will see while working on the task. Including some basic examples of 
+            good and bad answers here can help get good results. You can include 
+            any HTML here. -->
+      <short-instructions>
+        In this task, you will be shown a long document ("Source Document") and its Summary. A span of text will be highlighted in the summary, and the goal is to check if this span is factually supported by the source document. You will need to choose one of two options: <br /><br />
+
+        1. <b>Yes</b>: if all the facts in the highlighted summary span are supported by the source document <br />
+        2. <b>No</b>: if the highlighted summary span presents some information that is not supported by the source document (either a direct contradiction, or not present)<br />
+        <br />
+        <!-- 3. <b>Irrelevant</b>: if the claim neither supports not contradicts the evidence<br /><br /> -->
+        
+        In addition to the source document, you will be provided with some highlighted text ("hints") in the source document which may help you in making a decision. Press the <button disabled>Next Hint</button> button to scroll through the highlighted hints.<br /><br />
+        
+        <i>IMPORTANT NOTE</i>: Source document hints may or may not be helpful. Do not make a judgment solely based on these hints. Skim through the source document yourself / search for keywords with Ctrl + F if the hints are not helpful.<br /><br />
+        
+        Below you can find some short representative <b>examples</b>.<br /><br />
+        
+        <u>Example #1</u><br />
+        <b>Summary (only highlighted span shown)</b> = ... Retief is not Lemuel's cousin. ... <br />
+        <b>Source Document (snippets shown)</b> = He eyed Retief ... "He ain't no cousin of mine," Lemuel said slowly. <br />
+        <b>Supports</b> = Yes <br /><br />
+        
+        <u>Example #2</u><br />
+        <b>Summary (only highlighted span shown)</b> = ... Lemeul knocks down Retief. ... <br />
+        <b>Source Document (snippets shown)</b> = Retief's left fist shot out, smacked Lemuel's face dead center. He stumbled back, blood starting from his nose; ... He caught himself, jumped for Retief ... and met a straight right that snapped him onto his back: out cold. "Wow!" said Potter. "The stranger took Lem ... in two punches!" <br />
+        <b>Supports</b> = No (<i>Reason: Retief knocks down Lemeul, not the other way around.</i>)<br /><br />
+        
+        <u>Example #3</u><br />
+        <b>Summary (only highlighted span shown)</b> = ... Potter and his team do not trust the Embassy. ... <br />
+        <b>Source Document (snippets shown)</b> = Lemme up. My name's Potter. Sorry 'bout that. I figured it was a Flap-jack boat; looks just like 'em . He waved a hand toward the north, where the desert lay. <br />
+        <b>Supports</b> = No (<i>Reason: The claim is irrelevant to the evidence.</i>) <br /><br />
+      </short-instructions>
+
+      <!-- Use the full-instructions section for more detailed instructions that the 
+            Worker can open while working on the task. Including more detailed 
+            instructions and additional examples of good and bad answers here can
+            help get good results. You can include any HTML here. -->
+      <full-instructions header="Semantic Similarity Instructions">
+        <h2>How similar is the meaning of these two pieces of text?</h2>
+      </full-instructions>
+
+    </crowd-classifier>
+</crowd-form>

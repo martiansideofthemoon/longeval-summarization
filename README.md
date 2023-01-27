@@ -1,6 +1,6 @@
 ## LongEval: Guidelines for Human Evaluation of Faithfulness in Long-form Summarization
 
-This is the official repository for our EACL 2023 paper, LongEval: Guidelines for Human Evaluation of Faithfulness in Long-form Summarization. LongEval is a set of three guidelines to help manually evaluate factuality of long summaries. This repository provides the annotation data we collected, along with a command-line tool to prepare data in a format compatible with our annotation guidelines.
+This is the official repository for our EACL 2023 paper, [LongEval: Guidelines for Human Evaluation of Faithfulness in Long-form Summarization](https://martiansideofthemoon.github.io/assets/longeval.pdf). LongEval is a set of three guidelines to help manually evaluate factuality of long summaries. This repository provides the annotation data we collected, along with a command-line tool to prepare data in a format compatible with our annotation guidelines.
 
 ### Setup
 
@@ -37,8 +37,17 @@ Note that while we used AMT Sandbox to host our annotation interface, all our an
 To get your summarization data in a format compatible with our templates,
 
 ```
-
+python -m longeval.prepare_summaries \
+    --src_file data/pubmed/beam_3.jsonl \
+    --scu_fraction 0.5 \
+    --num_articles 3 \
+    --num_truncate_splits 3 \
+    --linking_algorithm superpal \
+    --output_dir outputs/pubmed_beam_3 \
+    --included_models "bigbird_pegasus;longt5;human"
 ```
+
+Each source article produces a different file containing all the summaries for that particular article. Make sure the input file is a JSONL file, with the `"article"` key representing the source document and one key for each model's summary. See [`data/pubmed/beam_3.jsonl`](data/pubmed/beam_3.jsonl) for an example.
 
 ### Citation
 

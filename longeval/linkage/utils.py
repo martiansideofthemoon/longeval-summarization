@@ -10,7 +10,7 @@ from bert_score import BERTScorer
 from longeval.linkage.multivers_utils import multivers_setup
 from longeval.linkage.summac_utils import summac_zero_setup
 from longeval.linkage.superpal_utils import superpal_setup
-from longeval.similarity.test_sim import find_similarity_matrix
+from longeval.linkage.similarity.test_sim import find_similarity_matrix
 from rank_bm25 import BM25Okapi
 from rouge_score import rouge_scorer
 from functools import partial

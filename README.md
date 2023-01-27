@@ -20,11 +20,13 @@ cd longeval-summarization
 pip install --editable .
 ```
 
-SpaCy setup:
+**Other setup**
 
 ```
 python -m spacy download en_core_web_lg
 ```
+
+Download the SIM model from [here](https://drive.google.com/drive/folders/1lBN2nbzxtpqbPUyeURtzt0k1kBY6u6Mj?usp=share_link) if you are interested in using the non-default linker from [Wieting et al. 2019](https://aclanthology.org/P19-1427/). Place both files in `longeval/linkage/similarity/sim`.
 
 
 ### Crowdsourcing Templates

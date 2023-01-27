@@ -14,8 +14,8 @@ import tqdm
 
 from utils import get_linking_fn, print_recall, dataset_list, squad_f1_matrix_fn, load_label_studio
 
-from eval_summary.similarity.test_sim import find_similarity_matrix
-from eval_summary.preprocessing.utils import export_server, process_ms2, get_sents
+from longeval.linkage.similarity.test_sim import find_similarity_matrix
+from longeval.preprocessing_utils import export_server, process_ms2, get_sents
 
 
 parser = argparse.ArgumentParser()

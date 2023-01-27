@@ -9,7 +9,7 @@ from collections import Counter
 import numpy as np
 from longeval.linkage.utils import f1_score
 from longeval.preprocessing_utils import get_sents
-from longeval.similarity.test_sim import find_similarity_matrix
+from longeval.linkage.similarity.test_sim import find_similarity_matrix
 import torch
 
 LABEL_MAP = {True: "CORRECT", False: "INCORRECT"}
@@ -63,6 +63,7 @@ def get_gold_evidence(best_src, doc_sents, style="highlight", num_prefix_sents=N
 
 
 def build_highlight_doc(best_src_matches, doc_sents):
+    """Highlight the alignments in the source document."""
     src_matches_done = {x: False for x in best_src_matches}
     evidence_num = 0
     for x in best_src_matches:
@@ -86,6 +87,7 @@ def build_highlight_doc(best_src_matches, doc_sents):
 
 
 def get_predicted_evidence(claim_scu, doc_sents, linker_matrix_fn, num_prefix_sents=None, num_evidence=5, style="highlight", score_threshold=0.3):
+    """Align a claim-scu pair with a document, and return a string with the evidence highlighted."""
     scu_matches = linker_matrix_fn([claim_scu], doc_sents)[0]
     if style == "snippet":
         scu_matches = torch.sort(scu_matches, descending=True).indices[:2 * num_evidence].tolist()
@@ -119,3 +121,30 @@ def build_evidence_string(best_src_matches, src_sents, prefix_sents=2, num_evide
         prev_sent = x
 
     return evidence_str
+
+def fix_quote_issues(text):
+    """Try to get the quotes in the same <br> separated line as the sentence they are in."""
+    if "<br />" in text:
+        split_token = "<br />"
+    else:
+        split_token = "\n"
+    text_units = text.split(split_token)
+
+    new_units = []
+    for i in range(len(text_units)):
+        if text_units[i].strip() == "\"":
+            new_units[-1] += "\""
+        else:
+            new_units.append(text_units[i])
+
+
+    for i, unit in enumerate(text_units):
+        non_space_chars = [x for x in unit if x != ' ']
+        # check if first/last two non-space characters are "
+        if len(non_space_chars) <= 2:
+            continue
+        if non_space_chars[-2] == "\"" and non_space_chars[-1] == "\"":
+            text_units[i] = text_units[i].strip()[:-1]
+            text_units[i + 1] = "\"" + text_units[i + 1]
+
+    return split_token.join(text_units)

@@ -1,4 +1,5 @@
 import torch
+import os
 
 from longeval.linkage.similarity.sim_models import WordAveraging
 from longeval.linkage.similarity.sim_utils import Example
@@ -7,16 +8,17 @@ import sentencepiece as spm
 
 tok = TreebankWordTokenizer()
 
-model = torch.load('longeval/linkage/similarity/sim/sim.pt')
-state_dict = model['state_dict']
-vocab_words = model['vocab_words']
-args = model['args']
-# turn off gpu
-model = WordAveraging(args, vocab_words)
-model.load_state_dict(state_dict, strict=True)
-sp = spm.SentencePieceProcessor()
-sp.Load('longeval/linkage/similarity/sim/sim.sp.30k.model')
-model.eval()
+if os.path.exists('longeval/linkage/similarity/sim/sim.pt'):
+    model = torch.load('longeval/linkage/similarity/sim/sim.pt')
+    state_dict = model['state_dict']
+    vocab_words = model['vocab_words']
+    args = model['args']
+    # turn off gpu
+    model = WordAveraging(args, vocab_words)
+    model.load_state_dict(state_dict, strict=True)
+    sp = spm.SentencePieceProcessor()
+    sp.Load('longeval/linkage/similarity/sim/sim.sp.30k.model')
+    model.eval()
 
 def make_example(sentence, model):
     sentence = sentence.lower()

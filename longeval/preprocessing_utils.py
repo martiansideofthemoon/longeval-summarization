@@ -13,11 +13,9 @@ except OSError:
                     "To install: 'python -m spacy download en_core_web_lg'")
 
 
-def split_sents(text, length_threshold=5, return_sents=False):
+def split_sents(text, length_threshold=5):
+    """Break up sentences into clauses and phrases."""
     sents = get_sents(text, return_nlp=True)
-    if return_sents:
-        sents = [x for x in sents if len(x.text.strip()) > 0]
-        return [[x.text] for x in sents], [x.text for x in sents]
     all_sent_units = []
     for s1 in sents:
         if not s1.text.strip():

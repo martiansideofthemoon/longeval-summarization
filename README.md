@@ -55,7 +55,7 @@ Each source article produces a different file containing all the summaries for t
 
 ### Annotated Data
 
-Coming soon!
+SQuALITY / PubMed human annotations coming in the next few days!
 
 ### Citation
 

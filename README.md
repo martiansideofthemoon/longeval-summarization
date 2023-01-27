@@ -53,6 +53,10 @@ python -m longeval.prepare_summaries \
 
 Each source article produces a different file containing all the summaries for that particular article. Make sure the input file is a JSONL file, with the `"article"` key representing the source document and one key for each model's summary. See [`data/pubmed/beam_3.jsonl`](data/pubmed/beam_3.jsonl) for an example.
 
+### Annotated Data
+
+Coming soon!
+
 ### Citation
 
 If you found our paper or repository useful, please cite us using:

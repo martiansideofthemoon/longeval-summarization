@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "longeval"
+version = "0.1.0"
+description = "Prepare your summarization data in a format compatible with the longeval guidelines for human evaluation."
+authors = ["Kalpesh Krishna"]
+license = "Apache 2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+transformers = "^4.26.0"
+spacy = "^3.5.0"
+torch = "^1.13.1"
+tqdm = "^4.64.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,5 +1,4 @@
 import argparse
-from collections import defaultdict
 import random
 import string
 import tqdm
@@ -16,9 +15,9 @@ parser.add_argument('--src_file', default="data/pubmed/beam_3.jsonl", type=str,
                           "'article' and the set of models to be evaluated (each model is a"
                           " separate key)."))
 parser.add_argument('--scu_fraction', default=None, type=float,
-                    desc="Fraction of SCUs to keep in the summary (default: 1.0).")
+                    desc="Fraction of content units / SCUs to keep in the summary (default: 1.0).")
 parser.add_argument('--scu_num', default=None, type=int,
-                    desc="Number of SCUs to keep in the summary (default: all SCUs preserved).")
+                    desc="Number of content units / SCUs to keep in the summary (default: all SCUs preserved).")
 parser.add_argument('--num_truncate_splits', default=3, type=int,
                     desc=("If --scu_num or --scu_fraction is set, make multiple splits of the data."
                           "Each split will have a different randomly selected set of SCUs."

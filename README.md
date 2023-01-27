@@ -10,6 +10,7 @@ This is the official repository for our EACL 2023 paper, LongEval: Guidelines fo
 python3.7 -m virtualenv longeval-venv
 source longeval-venv/bin/activate
 pip install longeval
+python -m spacy download en_core_web_lg
 
 # from source
 
@@ -18,13 +19,10 @@ source longeval-venv/bin/activate
 git clone https://github.com/martiansideofthemoon/longeval-summarization
 cd longeval-summarization
 pip install --editable .
+python -m spacy download en_core_web_lg
 ```
 
 **Other setup**
-
-```
-python -m spacy download en_core_web_lg
-```
 
 Download the SIM model from [here](https://drive.google.com/drive/folders/1lBN2nbzxtpqbPUyeURtzt0k1kBY6u6Mj?usp=share_link) if you are interested in using the non-default linker from [Wieting et al. 2019](https://aclanthology.org/P19-1427/). Place both files in `longeval/linkage/similarity/sim`.
 

@@ -12,6 +12,13 @@ transformers = "^4.26.0"
 spacy = "^3.5.0"
 torch = "^1.13.1"
 tqdm = "^4.64.1"
+pandas = "1.1"
+bert-score = "^0.3.12"
+pytorch-lightning = "1.2.1"
+nltk = "^3.8.1"
+sentencepiece = "^0.1.97"
+rank-bm25 = "^0.2.2"
+rouge-score = "^0.1.2"
 
 
 [build-system]

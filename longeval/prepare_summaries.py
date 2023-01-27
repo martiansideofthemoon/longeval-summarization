@@ -6,23 +6,23 @@ import tqdm
 from longeval.linkage.utils import get_linking_fn
 from longeval.preprocessing_utils import csv_dict_write, jsonl_read, split_sents, get_sents
 
-from utils import get_predicted_evidence, fix_quote_issues
+from longeval.utils import get_predicted_evidence, fix_quote_issues
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--src_file', default="data/pubmed/beam_3.jsonl", type=str,
-                    desc=("Input JSONL file with each line containing a dictionary with keys"
+                    help=("Input JSONL file with each line containing a dictionary with keys"
                           "'article' and the set of models to be evaluated (each model is a"
                           " separate key)."))
 parser.add_argument('--scu_fraction', default=None, type=float,
-                    desc="Fraction of content units / SCUs to keep in the summary (default: 1.0).")
+                    help="Fraction of content units / SCUs to keep in the summary (default: 1.0).")
 parser.add_argument('--scu_num', default=None, type=int,
-                    desc="Number of content units / SCUs to keep in the summary (default: all SCUs preserved).")
+                    help="Number of content units / SCUs to keep in the summary (default: all SCUs preserved).")
 parser.add_argument('--num_truncate_splits', default=3, type=int,
-                    desc=("If --scu_num or --scu_fraction is set, make multiple splits of the data."
+                    help=("If --scu_num or --scu_fraction is set, make multiple splits of the data."
                           "Each split will have a different randomly selected set of SCUs."
                           "Each annotator should be provided with a different split."))
-parser.add_argument('--num_articles', default=None, type=int, desc="Number of articles to process.")
+parser.add_argument('--num_articles', default=None, type=int, help="Number of articles to process.")
 parser.add_argument('--output_dir', default="outputs/pubmed_beam_3", type=str)
 parser.add_argument('--linking_algorithm', default="superpal", type=str)
 parser.add_argument('--included_models', default="bigbird_pegasus;longt5;human", type=str)
@@ -86,7 +86,7 @@ def main(args):
                     x = x + "."
                 # Align the SCU with the source document
                 evidence_doc, num_predicted_evidence, _ = get_predicted_evidence(claim_scu=x,
-                                                                                 doc_sents=original_doc_sents,
+                                                                                 doc_sents=original_doc_sents.copy(),
                                                                                  linker_matrix_fn=_matrix_fn,
                                                                                  style="highlight")
                 output_instance = {

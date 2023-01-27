@@ -61,5 +61,6 @@ SQuALITY
 ms2/ms2_data
 
 models
+poetry.lock
 
 longeval/linkage/similarity/sim/sim.*

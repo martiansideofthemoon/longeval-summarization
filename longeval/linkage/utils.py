@@ -19,7 +19,7 @@ from transformers import AutoTokenizer, DPRContextEncoder
 
 
 dataset_list = [
-    {"name": "LabelStudio", "source_file": "/data/kalpesh/human-eval-summary/data/linkage-data/label-studio-with-contextual-spans.json", "data_file": None, "cache": False, "label_studio": True, "source_dataset": "squality"}
+    {"name": "SQuALITY-Alignments", "source_file": "data/squality_alignment/data.json", "data_file": None, "cache": False, "label_studio": True, "source_dataset": "squality"}
 ]
 squality_info_unit_re = re.compile(r"(\#\d+\s=\s)(.*)(Contextualized =\s?)(.*)(Span =\s?)(.*)(Support\s?=\s?)(.*)")
 ms2_info_unit_re = re.compile(r"(\#\s?\d+\s?=\s?)(.*)(Support\s?=\s?)(.*)")
@@ -51,7 +51,7 @@ def get_linking_fn(linking_algorithm):
     return per_doc_setup_fn, matrix_fn
 
 
-def load_label_studio(dataset, contextualization="decontextualized", keep_newlines=False):
+def load_label_studio(dataset, contextualization="spans", keep_newlines=False):
     files = glob.glob(dataset["source_file"])
     data = []
     for filename in files:

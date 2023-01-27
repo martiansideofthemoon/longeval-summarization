@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "longeval"
-version = "0.1.0"
+version = "0.1.1"
 description = "Prepare your summarization data in a format compatible with the longeval guidelines for human evaluation."
 authors = ["Kalpesh Krishna, Erin Bransom, Bailey Kuehl, Mohit Iyyer, Pradeep Dasigi, Arman Cohan, Kyle Lo"]
 license = "Apache License 2.0"

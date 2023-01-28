@@ -2,7 +2,7 @@
 
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-red.svg)](#python)
 [![PyPI version longeval](https://badge.fury.io/py/longeval.svg)](https://pypi.python.org/pypi/longeval/) [![License: Apache 2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-<!-- [![Downloads](https://pepy.tech/badge/longeval)](https://pepy.tech/project/longeval) -->
+[![Downloads](https://pepy.tech/badge/longeval)](https://pepy.tech/project/longeval)
 
 This is the official repository for our EACL 2023 paper, [LongEval: Guidelines for Human Evaluation of Faithfulness in Long-form Summarization](https://martiansideofthemoon.github.io/assets/longeval.pdf). LongEval is a set of three guidelines to help manually evaluate factuality of long summaries. This repository provides the annotation data we collected, along with a command-line tool to prepare data in a format compatible with our annotation guidelines.
 
@@ -28,17 +28,16 @@ python -m spacy download en_core_web_lg
 
 Additionally, download the SIM model from [here](https://drive.google.com/drive/folders/1lBN2nbzxtpqbPUyeURtzt0k1kBY6u6Mj?usp=share_link) if you are interested in using the non-default linker from [Wieting et al. 2019](https://aclanthology.org/P19-1427/). Place both files in `longeval/linkage/similarity/sim`.
 
-To test the implementation works correctly run the experiment to evaluate SuperPAL's linking abilities (Table 4 in Section 3.3),
+To test the implementation works correctly, run the experiment to evaluate SuperPAL's linking abilities (Table 4 in Section 3.3):
 
 ```
-python -m longeval.evaluate_linkers
+python -m longeval.evaluate_linkers --linking_algorithm superpal
 
-# Expected output
+# Expected output (takes 5-6 min to run)
 Best match:
 Recall@3 = 0.6080 (76 / 125)
 Recall@5 = 0.6800 (85 / 125)
 Recall@10 = 0.7680 (96 / 125)
-
 ```
 
 ### Crowdsourcing Templates
@@ -53,7 +52,7 @@ To get your summarization data in a format compatible with our templates,
 
 ```
 python -m longeval.prepare_summaries \
-    --src_file data/pubmed/beam_3.jsonl \
+    --src_file data/pubmed_summaries/beam_3.jsonl \
     --scu_fraction 0.5 \
     --num_articles 3 \
     --num_truncate_splits 3 \
@@ -62,13 +61,42 @@ python -m longeval.prepare_summaries \
     --included_models "bigbird_pegasus;longt5;human"
 ```
 
-Each source article produces a different file containing all the summaries for that particular article. Make sure the input file is a JSONL file, with the `"article"` key representing the source document and one key for each model's summary. See [`data/pubmed/beam_3.jsonl`](data/pubmed/beam_3.jsonl) for an example.
+Each source article produces a different file containing all the summaries for that particular article. Make sure the input file is a JSONL file, with the `"article"` key representing the source document and one key for each model's summary. See [`data/pubmed_summaries/beam_3.jsonl`](data/pubmed_summaries/beam_3.jsonl) for an example.
 
 ### Annotated Data
 
-SQuALITY / PubMed human annotations coming in the next few days!
+**FINE/COARSE annotations**
 
-Our hand-annotated source-summary alignment data in SQuALITY can be found in [`data/squality_alignment/data.json`](data/squality_alignment/data.json).
+All the annotations can be found in this [Google Drive link](https://drive.google.com/drive/folders/1nLVmPQMmX_XOHrc_0I7oJBJfl6EMRqeK?usp=share_link). After downloading the data, place it in `data`. The annotations follow the AMT / LabelStudio formats, which may appear a bit complex. Functions to read-in the data are provided in [`longeval/metrics_corr_confidence_pubmed.py`](metrics_corr_confidence_pubmed.py).
+
+Running metric correlation scripts on this data (Figure 2) needs a few additional setup steps which we haven't included in the PyPI package due to dependency issues.
+
+1. Setup BLEURT using the instructions here: https://github.com/google-research/bleurt
+
+2. Setup SacreROUGE: https://github.com/danieldeutsch/sacrerouge, or simply run `pip install sacrerouge`
+
+3. Upgrade HuggingFace Hub since SacreROUGE downgrades it to an incompatible version.
+
+```
+pip install --upgrade huggingface-hub
+```
+
+After this setup simply run the following to reproduce Figure 2:
+
+```
+python -m longeval.metrics_corr_confidence_squality
+python -m longeval.metrics_corr_confidence_pubmed
+```
+
+**SQuALITY source-summary alignments**
+
+Finally, our hand-annotated source-summary alignment data in SQuALITY can be found in [`data/squality_alignment/data.json`](data/squality_alignment/data.json). To test linking algorithms on this run:
+
+```
+python -m longeval.evaluate_linkers --linking_algorithm superpal
+```
+
+You can set `--linking_algorithm` to any of the algorithms in the `get_linking_fn` function written in [`longeval/linkage/utils.py`](longeval/linkage/utils.py).
 
 ### Citation
 

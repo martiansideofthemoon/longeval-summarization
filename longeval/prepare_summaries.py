@@ -10,7 +10,7 @@ from longeval.utils import get_predicted_evidence, fix_quote_issues
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--src_file', default="data/pubmed/beam_3.jsonl", type=str,
+parser.add_argument('--src_file', default="data/pubmed_summaries/beam_3.jsonl", type=str,
                     help=("Input JSONL file with each line containing a dictionary with keys"
                           "'article' and the set of models to be evaluated (each model is a"
                           " separate key)."))

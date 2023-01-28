@@ -63,4 +63,6 @@ ms2/ms2_data
 models
 poetry.lock
 
+data/pubmed_annotations
+data/squality_annotations
 longeval/linkage/similarity/sim/sim.*

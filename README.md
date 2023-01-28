@@ -40,13 +40,13 @@ Recall@5 = 0.6800 (85 / 125)
 Recall@10 = 0.7680 (96 / 125)
 ```
 
-### Crowdsourcing Templates
+### LongEval crowdsourcing templates
 
 Our FINE-grained crowdsourcing interface can be found in [`templates/fine_sandbox_interface.html`](templates/fine_sandbox_interface.html). To use this interface, login to [AMT Sandbox](https://requestersandbox.mturk.com) and create a new project. Add this HTML code to the "Design Layout" tab. We also used this short instruction [video](https://youtu.be/LbZPo0AmXYI) to familiarize our FINE-grained annotators with the interface. Instructions to Upworkers for COARSE-grained evaluations on PubMed are provided in [`templates/coarse_instructions.md`](templates/coarse_instructions.md).
 
 Note that while we used AMT Sandbox to host our annotation interface, all our annotators were hired on Upwork only - no MTurk crowdworkers were used in our experiments. We provided Upwork annotations with the AMT Sandbox URL, and requested them to make an account on the interface. All payments were processed through Upwork only.
 
-### Preprocessing data
+#### Preprocessing summarization data to LongEval format
 
 To get your summarization data in a format compatible with our templates,
 
@@ -63,7 +63,7 @@ python -m longeval.prepare_summaries \
 
 Each source article produces a different file containing all the summaries for that particular article. Make sure the input file is a JSONL file, with the `"article"` key representing the source document and one key for each model's summary. See [`data/pubmed_summaries/beam_3.jsonl`](data/pubmed_summaries/beam_3.jsonl) for an example.
 
-### Annotated Data
+### Human judgments we collected using LongEval
 
 **FINE/COARSE annotations**
 

@@ -26,9 +26,20 @@ pip install --editable .
 python -m spacy download en_core_web_lg
 ```
 
-**Other setup**
+Additionally, download the SIM model from [here](https://drive.google.com/drive/folders/1lBN2nbzxtpqbPUyeURtzt0k1kBY6u6Mj?usp=share_link) if you are interested in using the non-default linker from [Wieting et al. 2019](https://aclanthology.org/P19-1427/). Place both files in `longeval/linkage/similarity/sim`.
 
-Download the SIM model from [here](https://drive.google.com/drive/folders/1lBN2nbzxtpqbPUyeURtzt0k1kBY6u6Mj?usp=share_link) if you are interested in using the non-default linker from [Wieting et al. 2019](https://aclanthology.org/P19-1427/). Place both files in `longeval/linkage/similarity/sim`.
+To test the implementation works correctly run the experiment to evaluate SuperPAL's linking abilities (Table 4 in Section 3.3),
+
+```
+python -m longeval.evaluate_linkers
+
+# Expected output
+Best match:
+Recall@3 = 0.6080 (76 / 125)
+Recall@5 = 0.6800 (85 / 125)
+Recall@10 = 0.7680 (96 / 125)
+
+```
 
 ### Crowdsourcing Templates
 
@@ -56,6 +67,8 @@ Each source article produces a different file containing all the summaries for t
 ### Annotated Data
 
 SQuALITY / PubMed human annotations coming in the next few days!
+
+Our hand-annotated source-summary alignment data in SQuALITY can be found in [`data/squality_alignment/data.json`](data/squality_alignment/data.json).
 
 ### Citation
 

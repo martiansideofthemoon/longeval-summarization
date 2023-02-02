@@ -54,7 +54,7 @@ def parse_args(args):
     parser.add_argument('--partial_correlation_variable', default='model_name', help='what column to use as confounding to calculate partial correlations')
     parser.add_argument('--store_path', default=None)
     parser.add_argument('--dataset', default=None, choices=[None, 'cnndm', 'bbc'], help='if None use all data')
-    parser.add_argument('--model_name', nargs='+', default=None, help=f'by default use all data, availble model names {model_names}')
+    parser.add_argument('--model_name', nargs='+', default=None, help=f'by default use all data, available model names {model_names}')
     args = parser.parse_args(args)
     return vars(args)
 

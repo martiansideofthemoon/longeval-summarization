@@ -68,7 +68,7 @@ Each source article produces a different file containing all the summaries for t
 
 **FINE/COARSE annotations**
 
-All the annotations can be found in this [Google Drive link](https://drive.google.com/drive/folders/1nLVmPQMmX_XOHrc_0I7oJBJfl6EMRqeK?usp=share_link). After downloading the data, place it in `data`. The annotations follow the AMT / LabelStudio formats, which may appear a bit complex. Functions to read-in the data are provided in [`longeval/metrics_corr_confidence_pubmed.py`](metrics_corr_confidence_pubmed.py).
+All the annotations can be found in this [Google Drive link](https://drive.google.com/drive/folders/1KxLGYp0t7iZ5J5uTVByhN37pL4jqqXVK?usp=sharing). After downloading the data, place it in `data`. The annotations follow the AMT / LabelStudio formats, which may appear a bit complex. Functions to read-in the data are provided in [`longeval/metrics_corr_confidence_pubmed.py`](metrics_corr_confidence_pubmed.py).
 
 Running metric correlation scripts on this data (Figure 2) needs a few additional setup steps which we haven't included in the PyPI package due to dependency issues.
 
